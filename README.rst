@@ -13,8 +13,8 @@ one driver plus n number of passengers. n being the number of passengers
 that driver can fit in his or her car. The app would then send the group
 arrangements to the GroupMe Group using the GroupMe APIs.
 
-Consideration
-#############
+Considerations
+##############
 
 Coordination among people who do not have cars and those who do depends on
 serveral factors:
@@ -67,6 +67,40 @@ Extra passengers can be specified like so:
 
 Joey will now be considered as a passenger, and the ride arranger will attempt
 to group Joey with a driver.
+
+If a driver does not have a car available for a certain reason, the driver
+role can be omitted for a person like so:
+
+.. code-block::
+
+   #rides ~alex
+
+Alex will now only be considered as a passenger, and not a driver, even
+though he orginally had the "driver" status.
+
+
+Scenarios
+#########
+
+Sometimes, location shouldn't be used as the primary deciding factor for
+arranging rides. The Ride Arranger should give the admin the option of
+defining certain scenarios and invoke them using a modifier.
+
+This is important because it's not always the case that people are
+leaving from different locations. Sometimes they are leaving from the
+same location. Likewise, sometimes they might be going to different
+locations based on an arbitrary parameter.
+
+Scenarios should be able to be defined via the django admin panel.
+Once scenarios have been created, they can be used by using the
+'$' modifier:
+
+.. code-block::
+
+   #rides $<scenario-name>
+   #rides $going-home
+   #rides $leaving-campus
+   #rides $same-dest
 
 
 Useful scenarios

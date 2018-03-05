@@ -16,6 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from ridearranger import listener
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^rides/', listener.get_ride_request)
 ]
