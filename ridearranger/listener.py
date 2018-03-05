@@ -20,7 +20,7 @@ def get_ride_request(request):
     # The scenario transformer to use for the request
     if request.method == 'POST':
         req_body = json.loads(request.body)
-        if '#rides' is req_body['text'].lower():
+        if '#rides' is req_body['text'].lower().encode():
             res_data = {
                 'text': "Welcome to the Ride Arranger Bot(RAB). This app is under development",
                 'bot_id': BOT_ID
