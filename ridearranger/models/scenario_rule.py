@@ -14,7 +14,14 @@ class ScenarioRule(models.Model):
         ('HL', 'Home Location'),
         ('SL', 'Same Location')
     )
+    GROUP_BY_CHOICES = {
+        ('DT', 'Destination Location'),
+        ('SR', 'Source Location')
+    }
 
+    name = models.CharField(
+        max_length = 20
+    )
     source_location_rule = models.CharField(
         max_length = 20,
         choices = SOURCE_LOCATION_RULE_CHOICES
@@ -23,9 +30,9 @@ class ScenarioRule(models.Model):
         max_length = 20,
         choices = DEST_LOCATION_RULE_CHOICES
     )
-    name = models.CharField(
-        max_length = 20
+    group_by_rule = models.CharField(
+        max_length = 20,
+        choices = GROUP_BY_CHOICES 
     )
-
     def __str__(self):
         return "{}".format(self.name)
