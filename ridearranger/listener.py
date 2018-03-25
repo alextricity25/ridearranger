@@ -29,7 +29,6 @@ def get_ride_request(request):
         if '#rides' in req_body['text'].lower():
             parser = LineParser(req_body['text'])
             result = parser.get_result()
-            #pdb.set_trace()
            
             # Get ready to generate the scenario
             modifiers = result['modifiers']
@@ -40,17 +39,10 @@ def get_ride_request(request):
                 _get_passengers())
 
             # This is the scenario dataset that we can work with
-            # It provides information for individuals based on
-            # their source and destination location
             print "Generating Scenario..."
             scenario = scenario_gen.get_scenario()
-            print scenario
-
-            # We can now pass that scenario dataset to the modifer plugin,
-            # which will further transform it to account for any modifers
-            # the user might have provided.
-            # TODO: implement modifer plugin
-
+            # The arranger needs the scenario and scenario rule objects
+            #arranger = Arranger(scenario, scenario_rule)
 
             # After being passed through the modifier plugin, we can now
             # process the dataset and arrange it to form groups of

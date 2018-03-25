@@ -15,8 +15,8 @@ class ScenarioRule(models.Model):
         ('SL', 'Same Location')
     )
     GROUP_BY_CHOICES = {
-        ('DT', 'Destination Location'),
-        ('SR', 'Source Location')
+        ('dest', 'Destination Location'),
+        ('src', 'Source Location')
     }
 
     name = models.CharField(

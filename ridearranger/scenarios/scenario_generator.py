@@ -1,4 +1,5 @@
 from ridearranger.models.scenario_rule import ScenarioRule
+from ridearranger.scenarios.scenario import Scenario
 import pdb
 
 class ScenarioGenerator():
@@ -20,14 +21,19 @@ class ScenarioGenerator():
         # locations that are not 'same' matter. This is because
         # ride arrangements only matter when considering different
         # locations
-        scenario = {
+        scenario_d = {
             'locations' : {
                 'src': dict(),
                 'dest': dict()
              }
         } # Get set of passenger and drivers src and dest location and build a dictionary with that
-        self._populate_locations(scenario, 'src', self.source_location_rule)
-        self._populate_locations(scenario, 'dest', self.dest_location_rule)
+        self._populate_locations(scenario_d, 'src', self.source_location_rule)
+        self._populate_locations(scenario_d, 'dest', self.dest_location_rule)
+        # TODO: At this point we want to pass the scenario dataset to a modifier plugin
+        #       that will apply any modifiers that the user might have given.
+
+        # Make a scenario object
+        scenario = Scenario(scenario_d, self.scenario_rule)
         return scenario
 
     def _populate_locations(self, scenario, direction, rule):
