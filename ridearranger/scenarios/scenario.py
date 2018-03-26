@@ -109,5 +109,15 @@ class Scenario():
                             num_people -= 1
         return num_drivers_needed
 
+    def switch_to_passenger_for_location(self, driver, location):
+        """
+        Switches this driver to be a passenger
+        """
+        for _location, persons in self.sub_scenario.iteritems():
+            if _location == location:
+                for _driver in persons['drivers']:
+                    if _driver == driver:
+                        persons['drivers'].remove(driver)
+                        persons['passengers'].append(driver)
 
 #TODO: What about creating a ScheduleGenerator? That generates a schedule of drivers and passengers over the period of a few weeks(or how ever many weeks it takes to rotate through all the drivers). Would this need to work off locations? probably.
