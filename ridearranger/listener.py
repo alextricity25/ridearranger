@@ -79,7 +79,8 @@ def _scenario_lookup(scenario_name):
 def _output_arrangements(arrangements):
     output_string = ""
     for location, drivers in arrangements.iteritems():
-        output_string += "-> " + location + "\n"
+        if location != 'same':
+            output_string += "-> " + location + "\n"
         for driver, passengers in drivers.iteritems():
             output_string += "    -> " + driver + "\n"
             for passenger in passengers:
