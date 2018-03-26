@@ -8,7 +8,9 @@ from .models.car import Car
 from .models.scenario_rule import ScenarioRule
 from ridearranger.line_parser import LineParser
 from ridearranger.scenarios.scenario_generator import ScenarioGenerator
+from ridearranger.arrangers.rand import RandomArranger
 import pdb
+import pprint
 
 # This method is invoked by the urls.py module
 # then the "/rides" endpoint is hit with a post request
@@ -48,13 +50,16 @@ def get_ride_request(request):
             # process the dataset and arrange it to form groups of
             # 1 driver plus n number of passengers
             # TODO: implement arranger plugin(s)
+            arranger = RandomArranger(scenario, scenario_rule)
+            arrangements = arranger.get_arrangements()
+            #output = pprint.pformat(arrangements)
+            print _output_arrangements(arrangements)
+            res_data = {
+                'text': _output_arrangements(arrangements),
+                'bot_id': BOT_ID
+            }
 
-#            res_data = {
-#                'text': "Welcome to the Ride Arranger Bot(RAB). This app is under development",
-#                'bot_id': BOT_ID
-#            }
-
-#            r = requests.post(url, json = res_data)
+            r = requests.post(url, json = res_data)
     return HttpResponse("Welcome to Ride Arranger Bot!")
 
 
@@ -70,3 +75,13 @@ def _scenario_lookup(scenario_name):
     for scenario in ScenarioRule.objects.all():
         if scenario.name == scenario_name:
             return scenario
+
+def _output_arrangements(arrangements):
+    output_string = ""
+    for location, drivers in arrangements.iteritems():
+        output_string += "-> " + location + "\n"
+        for driver, passengers in drivers.iteritems():
+            output_string += "    -> " + driver + "\n"
+            for passenger in passengers:
+                output_string += "            " + passenger.first_name + "\n"
+    return output_string
