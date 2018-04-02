@@ -1,10 +1,11 @@
 from ridearranger.models.scenario_rule import ScenarioRule
 from ridearranger.scenarios.scenario import Scenario
+from ridearranger.modifier import Modifier
 import pdb
 
 class ScenarioGenerator():
 
-    def __init__(self, scenario_rule, drivers, passengers):
+    def __init__(self, scenario_rule, modifiers, drivers, passengers):
 
         if not isinstance(scenario_rule, ScenarioRule):
             raise Exception("ScenarioGenerator needs ScenarioRule object to work on!")
@@ -12,6 +13,7 @@ class ScenarioGenerator():
         self.scenario_rule = scenario_rule
         self.drivers = drivers
         self.passengers = passengers
+        self.modifiers = modifiers
 
         self.source_location_rule = self.scenario_rule.source_location_rule
         self.dest_location_rule = self.scenario_rule.dest_location_rule
@@ -29,11 +31,13 @@ class ScenarioGenerator():
         } # Get set of passenger and drivers src and dest location and build a dictionary with that
         self._populate_locations(scenario_d, 'src', self.source_location_rule)
         self._populate_locations(scenario_d, 'dest', self.dest_location_rule)
-        # TODO: At this point we want to pass the scenario dataset to a modifier plugin
-        #       that will apply any modifiers that the user might have given.
-
         # Make a scenario object
         scenario = Scenario(scenario_d, self.scenario_rule)
+        # The modifer class modifies the scenario object to include
+        # and exclude drivers or passengers. Modifiers are defined
+        # by the user via groupme
+        m = Modifier(self.modifiers)
+        m.apply_modifiers_to_scenario(scenario)
         return scenario
 
     def _populate_locations(self, scenario, direction, rule):

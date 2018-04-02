@@ -1,4 +1,5 @@
 from ridearranger.models.scenario_rule import ScenarioRule
+from ridearranger.models.person import Person
 import pdb
 
 class Scenario():
@@ -120,4 +121,56 @@ class Scenario():
                         persons['drivers'].remove(driver)
                         persons['passengers'].append(driver)
 
+    def remove_person(self, person):
+        """
+        Removes any mention of the person from the scenario
+        """
+        for _location, role in self.sub_scenario.iteritems():
+            for driver in role['drivers']:
+                if person == driver:
+                    role['drivers'].remove(person)
+            for passenger in role['passengers']:
+                if person == passenger:
+                    role['passengers'].remove(person)
+
+    def remove_driver_role(self, driver):
+        """
+        Converts a drvier to a passenger
+        """
+        driver = self._person_lookup(driver)
+        for _location, role in self.sub_scenario.iteritems():
+            for _driver in role['drivers']:
+                if driver == _driver:
+                    role['drivers'].remove(driver)
+                    role['passengers'].append(driver)
+
+    def add_passenger(self, passenger):
+        """
+        Add's a passenger to the 'same' location.
+        Only the 'same' location is considered when adding a passenger
+        """
+        #pdb.set_trace()
+        for _location, role in self.sub_scenario.iteritems():
+            if _location == 'same':
+                print "ADDING PASSENGER: {}".format(self._person_lookup(passenger))
+                role['passengers'].append(self._person_lookup(passenger))
+        #pdb.set_trace()
+
+    def _person_lookup(self, driver):
+        print "PERSON LOOKUP INVOKED"
+        for person in Person.objects.all():
+            if person.first_name.lower() == driver.lower():
+                return person
+        # If the person doesn't exist in the Database, then create a person
+        # object. That person's home location will always be 'same'
+        p = Person()
+        p.first_name = driver
+        p.last_name = 'NOTGIVEN'
+        p.location = 'same'
+        return p
+#        Person.objects.create(
+#            first_name = driver,
+#            last_name = 'NOTGIVEN',
+#            location = 'same')
+        #return Person.objects.get(first_name = driver)
 #TODO: What about creating a ScheduleGenerator? That generates a schedule of drivers and passengers over the period of a few weeks(or how ever many weeks it takes to rotate through all the drivers). Would this need to work off locations? probably.

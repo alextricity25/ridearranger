@@ -35,11 +35,13 @@ def get_ride_request(request):
             # Get ready to generate the scenario
             modifiers = result['modifiers']
             scenario_rule = _scenario_lookup(result['scenario_rule'])
+            #pdb.set_trace()
             scenario_gen = ScenarioGenerator(
                 scenario_rule,
+                modifiers,
                 _get_drivers(),
                 _get_passengers())
-
+            print modifiers
             # This is the scenario dataset that we can work with
             print "Generating Scenario..."
             scenario = scenario_gen.get_scenario()
@@ -59,7 +61,7 @@ def get_ride_request(request):
                 'bot_id': BOT_ID
             }
 
-            r = requests.post(url, json = res_data)
+            #r = requests.post(url, json = res_data)
     return HttpResponse("Welcome to Ride Arranger Bot!")
 
 
