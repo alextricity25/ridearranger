@@ -14,5 +14,6 @@ class Modifier():
             scenario.remove_driver_role(person_name[1:])
         for person_name in self.modifiers['excluded']:
             scenario.remove_person(person_name[1:])
-        
+        for person_name in self.modifiers['added_drivers']:
+            scenario.add_driver(person_name[1:])
         

@@ -6,11 +6,12 @@ class LineParser():
     '''
     This class parses the request made by a user via GroupMe
     into a result dataset containing the following properties:
-    * modifiers (any words preceeded with '-', '+', or '~'
+    * modifiers (any words preceeded with '-', '+', '~', or '>':
         * Excluded - any people that are excluded
         * Included - any people that are included
         * Role removal - Any people that have had a role modified
                          i.e. the driver role has been removed
+        * Add driver role - People that are designated as drivers.
     * Scenario rules (any words preceeded with '$'
     '''
     def __init__(self, line):
@@ -25,7 +26,7 @@ class LineParser():
         }
 
     def get_result(self):
-        modifier_reg = re.compile('[-+~][A-Za-z]+')
+        modifier_reg = re.compile('[-+~>][A-Za-z]+')
         scenario_reg = re.compile('\$[-_A-Za-z0-9]+')
         modifiers = modifier_reg.findall(self.line)
         scenario = scenario_reg.findall(self.line)
@@ -41,6 +42,7 @@ class LineParser():
         excluded_mods = []
         included_mods = []
         role_rem_mods = []
+        driver_mods = []
         for mod in modifiers:
             if mod[0] == '-':
                 excluded_mods.append(mod)
@@ -48,6 +50,9 @@ class LineParser():
                 included_mods.append(mod)
             elif mod[0] == '~':
                 role_rem_mods.append(mod)
+            elif mod[0] == '>':
+                driver_mods.append(mod)
         self.result['modifiers']['excluded'] = excluded_mods
         self.result['modifiers']['included'] = included_mods
         self.result['modifiers']['role_removal'] = role_rem_mods
+        self.result['modifiers']['added_drivers'] = driver_mods

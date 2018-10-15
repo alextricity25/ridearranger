@@ -3,6 +3,7 @@ import requests
 from django.http import HttpResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 from .models.person import Person
 from .models.car import Car
 from .models.scenario_rule import ScenarioRule
@@ -62,6 +63,7 @@ def get_ride_request(request):
             }
 
             #r = requests.post(url, json = res_data)
+            return HttpResponse(json.dumps(arrangements), content_type="application/json")
     return HttpResponse("Welcome to Ride Arranger Bot!")
 
 
@@ -86,5 +88,11 @@ def _output_arrangements(arrangements):
         for driver, passengers in drivers.iteritems():
             output_string += "    -> " + driver + "\n"
             for passenger in passengers:
-                output_string += "            " + passenger.first_name + "\n"
+                output_string += "            " + passenger + "\n"
     return output_string
+
+def _serialize_arrangements(arrangements):
+    for location, drivers in arrangements.iteritems():
+        for driver, passengers in drivers.iteritems():
+            for passenger in passengers:
+                passenger = model_to_dict(passenger)

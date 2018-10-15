@@ -65,9 +65,9 @@ class RandomArranger():
             passengers = self.scenario.get_passengers_for_location(location)
             count = 1
             while passengers:
-                rand_index = random.randint(0, len(passengers))
+                rand_index = random.randint(0, len(passengers) -1)
                 driver_index = (count % len(drivers))
-                arrangements[location][drivers[driver_index].first_name].append(passengers.pop())
+                arrangements[location][drivers[driver_index].first_name].append(passengers.pop(rand_index).first_name)
                 count += 1
         return arrangements
             # The rest of the drivers need to be converted to passengers

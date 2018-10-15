@@ -1,5 +1,6 @@
 from ridearranger.models.scenario_rule import ScenarioRule
 from ridearranger.models.person import Person
+from ridearranger.models.car import Car
 import pdb
 
 class Scenario():
@@ -144,6 +145,16 @@ class Scenario():
                     role['drivers'].remove(driver)
                     role['passengers'].append(driver)
 
+    def add_driver(self, driver):
+        """
+        Add's a driver to the 'same' location.
+        Only the 'same' location is considered when adding a driver.
+        """
+        for _location, role in self.sub_scenario.iteritems():
+            if _location == 'same':
+                print "ADDING DRIVER: {}".format(self._person_lookup(driver, is_driver = True))
+                role['drivers'].append(self._person_lookup(driver, is_driver = True))
+
     def add_passenger(self, passenger):
         """
         Add's a passenger to the 'same' location.
@@ -156,7 +167,7 @@ class Scenario():
                 role['passengers'].append(self._person_lookup(passenger))
         #pdb.set_trace()
 
-    def _person_lookup(self, driver):
+    def _person_lookup(self, person_name, is_driver=False):
         print "PERSON LOOKUP INVOKED"
         for person in Person.objects.all():
             if person.first_name.lower() == driver.lower():
@@ -164,9 +175,22 @@ class Scenario():
         # If the person doesn't exist in the Database, then create a person
         # object. That person's home location will always be 'same'
         p = Person()
-        p.first_name = driver
+        p.first_name = person_name
         p.last_name = 'NOTGIVEN'
         p.location = 'same'
+
+        # If the person is a driver, then create a car object and set
+        # is_driver to true. By default, the program will assume that
+        # the driver has a car that can fit at most 3 people
+        if is_driver:
+            c = Car()
+            c.name = 'NOTGIVEN'
+            c.make = 'NOTGIVEN'
+            c.year = 'NOTGIVEN'
+            c.num_passengers = 3
+            p.is_driver = True
+            p.car = c
+
         return p
 #        Person.objects.create(
 #            first_name = driver,
