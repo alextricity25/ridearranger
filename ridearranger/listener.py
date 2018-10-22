@@ -63,8 +63,20 @@ def get_ride_request(request):
             }
 
             #r = requests.post(url, json = res_data)
-            return HttpResponse(json.dumps(arrangements), content_type="application/json")
-    return HttpResponse("Welcome to Ride Arranger Bot!")
+            response = HttpResponse(json.dumps(arrangements), content_type="application/json")
+            response['Access-Control-Allow-Origin'] = "*"
+            response['Access-Control-Allow-Methods'] = "POST, OPTIONS, GET"
+            response['Access-Control-Allow-Headers'] = "content-type"
+            response['Access-Control-Max-Age'] = "1000"
+            return response
+
+    response = HttpResponse("Welcome to Ride Arranger Bot!")
+    
+    response['Access-Control-Allow-Origin'] = "*"
+    response['Access-Control-Allow-Methods'] = "POST, OPTIONS, GET"
+    response['Access-Control-Allow-Headers'] = "content-type"
+    response['Access-Control-Max-Age'] = "1000"
+    return response
 
 
 def _get_passengers():
